@@ -23,7 +23,6 @@ class MovieInfo:
 
 
 page = SessionPage()
-# url =
 page.get('http://www.spiderbuf.cn/h02/')
 
 elems = page.eles('.col-xs-12 col-lg-12')
