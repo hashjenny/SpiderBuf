@@ -1,8 +1,8 @@
 from DataRecorder import Recorder
-from DrissionPage import SessionPage
+from DrissionPage import SessionPage, ChromiumPage
 
 
-def save_table_data(page: SessionPage, file: str):
+def save_table_data(page: SessionPage | ChromiumPage, file: str):
     recorder = Recorder(file)
 
     # add head
@@ -17,6 +17,23 @@ def save_table_data(page: SessionPage, file: str):
         row_data = []
         for item in row.eles('tag:td'):
             row_data.append(item.text)
+        recorder.add_data(row_data)
+
+    recorder.record()
+
+
+def save_table_data2(page: SessionPage | ChromiumPage, file: str):
+    recorder = Recorder(file)
+
+    rows = page.ele('.table').eles('tag:tr')
+    for row in rows:
+        row_data = []
+        if row.ele('th'):
+            for item in row.eles('tag:th'):
+                row_data.append(item.text)
+        else:
+            for item in row.eles('tag:td'):
+                row_data.append(item.text)
         recorder.add_data(row_data)
 
     recorder.record()
