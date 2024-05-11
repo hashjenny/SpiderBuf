@@ -11,6 +11,7 @@ end = js_code.index(';')
 js_code = js_code[start+1:end]
 
 data = eval(js_code)
+
 # for item in data:
 #     print(item)
 
