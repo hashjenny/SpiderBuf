@@ -1,9 +1,15 @@
 .venv/
 .idea/
+.idea/.gitignore
+__pycache__/
+
 *.csv
 *.html
 *.xml
 *.iml
+
 *.jpg
 *.png
 *.webp
+
+*.ipynb
