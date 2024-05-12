@@ -25,29 +25,31 @@ def save_table_data(page: SessionPage | ChromiumPage, file: str):
     recorder.record()
 
 
-def save_data_by_session(page: ChromiumPage, file: str):
+def save_data_by_session(page: ChromiumPage | SessionPage, file: str):
     recorder = Recorder(file)
 
     html = f"./{file.split('.')[0]}.html"
     with open(html, "w", encoding="utf-8") as f:
         f.write(page.html)
 
-    session = SessionPage()
-    # html的绝对路径不能带有中文，否则会出错
-    session.get(html)
-    rows = session.ele(".table").eles("tag:tr")
-    for row in rows:
-        row_data = []
-        if row.ele("tag:th"):
-            for item in row.eles("tag:th"):
-                row_data.append(item.text)
-        else:
-            for item in row.eles("tag:td"):
-                row_data.append(item.text)
-        recorder.add_data(row_data)
+    try:
+        session = SessionPage()
+        # html的绝对路径不能带有中文，否则会出错
+        session.get(html)
+        rows = session.ele(".table").eles("tag:tr")
+        for row in rows:
+            row_data = []
+            if row.ele("tag:th"):
+                for item in row.eles("tag:th"):
+                    row_data.append(item.text)
+            else:
+                for item in row.eles("tag:td"):
+                    row_data.append(item.text)
+            recorder.add_data(row_data)
 
-    recorder.record()
-    os.remove(html)
+        recorder.record()
+    finally:
+        os.remove(html)
 
 
 def save_data_by_bs4(html: str, file: str):
