@@ -2,6 +2,8 @@ from DataRecorder import Recorder
 from DrissionPage import SessionPage, ChromiumPage
 from bs4 import BeautifulSoup
 
+import os
+
 
 def save_table_data(page: SessionPage | ChromiumPage, file: str):
     recorder = Recorder(file)
@@ -23,10 +25,17 @@ def save_table_data(page: SessionPage | ChromiumPage, file: str):
     recorder.record()
 
 
-def save_table_data2(page: SessionPage | ChromiumPage, file: str):
+def save_data_by_session(page: ChromiumPage, file: str):
     recorder = Recorder(file)
 
-    rows = page.ele(".table").eles("tag:tr")
+    html = f"./{file.split('.')[0]}.html"
+    with open(html, "w", encoding="utf-8") as f:
+        f.write(page.html)
+
+    session = SessionPage()
+    # html的绝对路径不能带有中文，否则会出错
+    session.get(html)
+    rows = session.ele(".table").eles("tag:tr")
     for row in rows:
         row_data = []
         if row.ele("tag:th"):
@@ -38,6 +47,7 @@ def save_table_data2(page: SessionPage | ChromiumPage, file: str):
         recorder.add_data(row_data)
 
     recorder.record()
+    os.remove(html)
 
 
 def save_data_by_bs4(html: str, file: str):
